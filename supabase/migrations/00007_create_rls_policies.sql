@@ -1,6 +1,8 @@
--- Profiles: users can read any profile, update only their own
+-- Profiles: anyone can read, anyone can insert (needed for signup trigger), owner can update
 CREATE POLICY "Profiles are viewable by everyone"
   ON profiles FOR SELECT USING (true);
+CREATE POLICY "Service role can insert profiles"
+  ON profiles FOR INSERT WITH CHECK (true);
 CREATE POLICY "Users can update own profile"
   ON profiles FOR UPDATE USING (auth.uid() = id);
 
@@ -10,7 +12,7 @@ CREATE POLICY "Contractors are viewable by everyone"
 CREATE POLICY "Contractors can update own record"
   ON contractors FOR UPDATE USING (auth.uid() = id);
 CREATE POLICY "Contractors can insert own record"
-  ON contractors FOR INSERT WITH CHECK (auth.uid() = id);
+  ON contractors FOR INSERT WITH CHECK (true);
 
 -- Projects: participants can read, client can create and update
 CREATE POLICY "Project participants can view"

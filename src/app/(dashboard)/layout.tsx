@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
+import { BottomNav } from "@/components/layout/bottom-nav";
 import type { UserRole } from "@/lib/types/database";
 
 export default async function DashboardLayout({
@@ -45,8 +46,11 @@ export default async function DashboardLayout({
           avatarUrl={profile.avatar_url}
           role={role}
         />
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 pb-20 lg:p-6 lg:pb-6">
+          {children}
+        </main>
       </div>
+      <BottomNav role={role} />
     </div>
   );
 }
