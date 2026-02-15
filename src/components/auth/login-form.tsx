@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const initialState: AuthState = { error: null };
 
 export function LoginForm() {
   const [state, formAction, isPending] = useActionState(signIn, initialState);
+  const t = useTranslations();
 
   return (
     <form action={formAction} className="space-y-4">
@@ -21,37 +23,37 @@ export function LoginForm() {
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("auth.email")}</Label>
         <Input
           id="email"
           name="email"
           type="email"
-          placeholder="you@example.com"
+          placeholder={t("auth.emailPlaceholder")}
           required
           autoComplete="email"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">{t("auth.password")}</Label>
         <Input
           id="password"
           name="password"
           type="password"
-          placeholder="Enter your password"
+          placeholder={t("auth.passwordPlaceholder")}
           required
           autoComplete="current-password"
         />
       </div>
 
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Signing in..." : "Sign In"}
+        {isPending ? t("auth.signingIn") : t("auth.signIn")}
       </Button>
 
       <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{" "}
+        {t("auth.dontHaveAccount")}{" "}
         <Link href="/signup" className="text-brand-600 hover:underline">
-          Sign up
+          {t("auth.signUp")}
         </Link>
       </p>
     </form>

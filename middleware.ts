@@ -15,6 +15,6 @@ export const config = {
      * - public folder assets
      * - API webhook routes (need raw body)
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|api/stripe/webhook|api/mux/webhook).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sw\\.js|manifest\\.json|offline\\.html|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$|api/stripe/webhook|api/mux/webhook).*)",
   ],
 };

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { PushPrompt } from "@/components/notifications/push-prompt";
 import type { UserRole } from "@/lib/types/database";
 
 export default async function DashboardLayout({
@@ -36,6 +37,7 @@ export default async function DashboardLayout({
   }
 
   const role = profile.role as UserRole;
+  const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -45,8 +47,10 @@ export default async function DashboardLayout({
           fullName={profile.full_name}
           avatarUrl={profile.avatar_url}
           role={role}
+          userId={user.id}
         />
         <main className="flex-1 overflow-y-auto p-4 pb-20 lg:p-6 lg:pb-6">
+          {vapidPublicKey && <PushPrompt vapidPublicKey={vapidPublicKey} />}
           {children}
         </main>
       </div>

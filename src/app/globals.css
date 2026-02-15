@@ -7,7 +7,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -46,20 +46,21 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
-  /* ConstructShield Brand Colors */
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --color-brand-900: #1e3a5f;
+  /* ConstructShield Brand Colors — Monochrome + Construction Accent */
+  --color-brand-50: #fafaf9;
+  --color-brand-100: #f5f5f4;
+  --color-brand-500: #78716c;
+  --color-brand-600: #1c1917;
+  --color-brand-700: #0c0a09;
+  --color-brand-900: #0c0a09;
+  --color-accent-warm: #b45309;
   --color-trust-green: #16a34a;
   --color-warning-amber: #f59e0b;
   --color-danger-red: #dc2626;
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.25rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -134,4 +135,52 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Logo loading animation */
+@keyframes logo-fade-in {
+  from {
+    opacity: 0.08;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes border-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.logo-loader {
+  animation: logo-fade-in 1.8s ease-in-out forwards;
+}
+
+.border-spinner::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: oklch(0.145 0 0);
+  animation: border-spin 1s linear infinite;
+}
+
+/* Leaflet z-index containment — prevent map from overlapping form fields/dialogs */
+.leaflet-container {
+  z-index: 0;
+  font-family: inherit;
+}
+
+.leaflet-pane {
+  z-index: 0;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 1;
 }

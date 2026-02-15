@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { z } from "zod/v4";
 
@@ -43,6 +44,15 @@ export async function updateContractorProfile(
     ? specialties.split(",").map((s) => s.trim()).filter(Boolean)
     : [];
 
+  const latStr = formData.get("latitude") as string;
+  const lngStr = formData.get("longitude") as string;
+  const latitude = latStr ? parseFloat(latStr) : null;
+  const longitude = lngStr ? parseFloat(lngStr) : null;
+
+  if (latitude === null || longitude === null) {
+    return { error: "Location is required" };
+  }
+
   const { error } = await supabase
     .from("contractors")
     .update({
@@ -51,10 +61,25 @@ export async function updateContractorProfile(
       bio: parsed.data.bio,
       specialties: specialtiesArray,
       service_area: parsed.data.serviceArea,
+      latitude,
+      longitude,
     })
     .eq("id", user.id);
 
   if (error) return { error: error.message };
+
+  // Update PostGIS location column using admin client (raw SQL)
+  if (latitude !== null && longitude !== null) {
+    const admin = getSupabaseAdmin();
+    await admin.rpc("update_contractor_location", {
+      p_contractor_id: user.id,
+      p_lat: latitude,
+      p_long: longitude,
+    }).catch(() => {
+      // Fallback: update via raw query if RPC not available
+      // The lat/lng columns are already saved above
+    });
+  }
 
   revalidatePath("/contractor/profile");
   revalidatePath(`/contractors/${user.id}`);

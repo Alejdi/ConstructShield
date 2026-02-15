@@ -1,14 +1,6 @@
 "use client";
 
-import { AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 export default function DashboardError({
   error,
@@ -17,24 +9,20 @@ export default function DashboardError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations();
+
   return (
-    <Card className="mx-auto max-w-lg">
-      <CardHeader>
-        <div className="flex items-center gap-3">
-          <AlertTriangle className="h-5 w-5 text-destructive" />
-          <CardTitle>Something went wrong</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {error.message && (
-          <p className="text-muted-foreground text-sm">{error.message}</p>
-        )}
-      </CardContent>
-      <CardFooter>
-        <Button onClick={reset} size="sm">
-          Try Again
-        </Button>
-      </CardFooter>
-    </Card>
+    <div className="mx-auto max-w-lg border p-8">
+      <h2 className="mb-2 text-lg font-bold">{t("errors.somethingWentWrong")}</h2>
+      {error.message && (
+        <p className="mb-6 text-sm text-muted-foreground">{error.message}</p>
+      )}
+      <button
+        onClick={reset}
+        className="border border-foreground px-5 py-2 text-xs font-medium uppercase tracking-[0.15em] transition-colors hover:bg-foreground hover:text-background"
+      >
+        {t("common.tryAgain")}
+      </button>
+    </div>
   );
 }

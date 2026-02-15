@@ -25,6 +25,7 @@ import {
   Eye,
 } from "lucide-react";
 import { VideoUploader } from "@/components/video/video-uploader";
+import { useTranslations } from "next-intl";
 
 interface MilestoneActionsProps {
   milestoneId: string;
@@ -39,15 +40,16 @@ export function MilestoneActions({
   role,
   proofVideoUrl,
 }: MilestoneActionsProps) {
+  const t = useTranslations();
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleFund() {
     setIsLoading(true);
     try {
       await fundMilestone(milestoneId);
-      toast.success("Milestone funded! Funds are held in escrow.");
+      toast.success(t("milestones.fundedMsg"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to fund");
+      toast.error(err instanceof Error ? err.message : t("milestones.fundFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -56,10 +58,34 @@ export function MilestoneActions({
   async function handleStartWork() {
     setIsLoading(true);
     try {
-      await startWork(milestoneId);
-      toast.success("Work started on this milestone.");
+      // Request GPS for proof-of-presence check-in
+      let checkInLat: number | undefined;
+      let checkInLng: number | undefined;
+
+      if (navigator.geolocation) {
+        try {
+          const position = await new Promise<GeolocationPosition>(
+            (resolve, reject) =>
+              navigator.geolocation.getCurrentPosition(resolve, reject, {
+                enableHighAccuracy: true,
+                timeout: 10000,
+              })
+          );
+          checkInLat = position.coords.latitude;
+          checkInLng = position.coords.longitude;
+        } catch {
+          // Location denied — proceed without check-in
+        }
+      }
+
+      const result = await startWork(milestoneId, checkInLat, checkInLng);
+      if (result?.onSite === false) {
+        toast.success(t("milestones.startedAway"));
+      } else {
+        toast.success(t("milestones.startedMsg"));
+      }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to start");
+      toast.error(err instanceof Error ? err.message : t("milestones.startFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -69,9 +95,9 @@ export function MilestoneActions({
     setIsLoading(true);
     try {
       await releaseFunds(milestoneId);
-      toast.success("Funds released to contractor!");
+      toast.success(t("milestones.releasedMsg"));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to release");
+      toast.error(err instanceof Error ? err.message : t("milestones.releaseFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -82,8 +108,8 @@ export function MilestoneActions({
     if (status === "waiting_for_funds") {
       return (
         <Button onClick={handleFund} disabled={isLoading} size="sm">
-          <DollarSign className="mr-1 h-4 w-4" />
-          {isLoading ? "Funding..." : "Fund"}
+          <DollarSign className="me-1 h-4 w-4" />
+          {isLoading ? t("milestones.funding") : t("milestones.fund")}
         </Button>
       );
     }
@@ -95,15 +121,15 @@ export function MilestoneActions({
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
-                  <Eye className="mr-1 h-4 w-4" />
-                  View Proof
+                  <Eye className="me-1 h-4 w-4" />
+                  {t("milestones.viewProof")}
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>Proof Video</DialogTitle>
+                  <DialogTitle>{t("milestones.proofVideo")}</DialogTitle>
                   <DialogDescription>
-                    Review the contractor&apos;s work before releasing funds
+                    {t("milestones.proofReview")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="aspect-video rounded-lg bg-muted">
@@ -122,8 +148,8 @@ export function MilestoneActions({
             size="sm"
             className="bg-trust-green hover:bg-trust-green/90"
           >
-            <CheckCircle className="mr-1 h-4 w-4" />
-            {isLoading ? "Releasing..." : "Release Funds"}
+            <CheckCircle className="me-1 h-4 w-4" />
+            {isLoading ? t("milestones.releasing") : t("milestones.releaseFunds")}
           </Button>
         </div>
       );
@@ -137,8 +163,8 @@ export function MilestoneActions({
     if (status === "funded") {
       return (
         <Button onClick={handleStartWork} disabled={isLoading} size="sm">
-          <Play className="mr-1 h-4 w-4" />
-          {isLoading ? "Starting..." : "Start Work"}
+          <Play className="me-1 h-4 w-4" />
+          {isLoading ? t("milestones.starting") : t("milestones.startWork")}
         </Button>
       );
     }
@@ -148,15 +174,15 @@ export function MilestoneActions({
         <Dialog>
           <DialogTrigger asChild>
             <Button size="sm">
-              <Video className="mr-1 h-4 w-4" />
-              Upload Proof
+              <Video className="me-1 h-4 w-4" />
+              {t("milestones.uploadProof")}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Upload Proof Video</DialogTitle>
+              <DialogTitle>{t("milestones.uploadProofVideo")}</DialogTitle>
               <DialogDescription>
-                Record or upload a video showing the completed work
+                {t("milestones.uploadProofDesc")}
               </DialogDescription>
             </DialogHeader>
             <VideoUploader type="proof" referenceId={milestoneId} />

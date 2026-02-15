@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { HardHat, User } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface RoleSelectorProps {
   value: "client" | "contractor";
@@ -9,6 +10,8 @@ interface RoleSelectorProps {
 }
 
 export function RoleSelector({ value, onChange }: RoleSelectorProps) {
+  const t = useTranslations();
+
   return (
     <div className="grid grid-cols-2 gap-3">
       <button
@@ -17,14 +20,14 @@ export function RoleSelector({ value, onChange }: RoleSelectorProps) {
         className={cn(
           "flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-all",
           value === "client"
-            ? "border-brand-600 bg-brand-50 text-brand-700"
-            : "border-border hover:border-muted-foreground/50"
+            ? "border-foreground bg-foreground/5 text-foreground"
+            : "border-border hover:border-foreground/50"
         )}
       >
         <User className="h-6 w-6" />
-        <span className="text-sm font-medium">Client</span>
+        <span className="text-sm font-medium">{t("auth.clientRole")}</span>
         <span className="text-xs text-muted-foreground">
-          I need construction work done
+          {t("auth.clientDesc")}
         </span>
       </button>
       <button
@@ -33,14 +36,14 @@ export function RoleSelector({ value, onChange }: RoleSelectorProps) {
         className={cn(
           "flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-all",
           value === "contractor"
-            ? "border-brand-600 bg-brand-50 text-brand-700"
-            : "border-border hover:border-muted-foreground/50"
+            ? "border-foreground bg-foreground/5 text-foreground"
+            : "border-border hover:border-foreground/50"
         )}
       >
         <HardHat className="h-6 w-6" />
-        <span className="text-sm font-medium">Contractor</span>
+        <span className="text-sm font-medium">{t("auth.contractorRole")}</span>
         <span className="text-xs text-muted-foreground">
-          I provide construction services
+          {t("auth.contractorDesc")}
         </span>
       </button>
     </div>

@@ -60,6 +60,80 @@ export async function POST(request: Request) {
       }
       break;
     }
+
+    case "checkout.session.completed": {
+      const session = event.data.object as Stripe.Checkout.Session;
+      if (session.mode === "subscription" && session.subscription) {
+        const contractorId = session.metadata?.contractor_id;
+        const tier = session.metadata?.tier;
+        if (contractorId && tier) {
+          const subscriptionId =
+            typeof session.subscription === "string"
+              ? session.subscription
+              : session.subscription.id;
+
+          await admin
+            .from("contractors")
+            .update({
+              stripe_subscription_id: subscriptionId,
+              subscription_tier: tier,
+              subscription_status: "active",
+            })
+            .eq("id", contractorId);
+
+          // Save customer ID on profile if not set
+          if (session.customer) {
+            const customerId =
+              typeof session.customer === "string"
+                ? session.customer
+                : session.customer.id;
+            await admin
+              .from("profiles")
+              .update({ stripe_customer_id: customerId })
+              .eq("id", contractorId);
+          }
+        }
+      }
+      break;
+    }
+
+    case "customer.subscription.updated": {
+      const subscription = event.data.object as Stripe.Subscription;
+      const statusMap: Record<string, string> = {
+        active: "active",
+        past_due: "past_due",
+        trialing: "trialing",
+        canceled: "canceled",
+        unpaid: "expired",
+        incomplete_expired: "expired",
+      };
+      const mappedStatus = statusMap[subscription.status] ?? subscription.status;
+
+      const periodEnd = subscription.items.data[0]?.current_period_end;
+
+      await admin
+        .from("contractors")
+        .update({
+          subscription_status: mappedStatus,
+          ...(periodEnd
+            ? { current_period_end: new Date(periodEnd * 1000).toISOString() }
+            : {}),
+        })
+        .eq("stripe_subscription_id", subscription.id);
+      break;
+    }
+
+    case "customer.subscription.deleted": {
+      const subscription = event.data.object as Stripe.Subscription;
+      await admin
+        .from("contractors")
+        .update({
+          subscription_status: "canceled",
+          subscription_tier: "basic",
+        })
+        .eq("stripe_subscription_id", subscription.id);
+      break;
+    }
   }
 
   return NextResponse.json({ received: true });

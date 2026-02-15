@@ -2,32 +2,32 @@ import { describe, it, expect } from "vitest";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 
 describe("formatCurrency", () => {
-  it("formats 10000 cents as $100.00", () => {
-    expect(formatCurrency(10000)).toBe("$100.00");
+  it("formats 10000 cents as 100,00 €", () => {
+    expect(formatCurrency(10000)).toBe("100,00\u00a0€");
   });
 
-  it("formats 0 cents as $0.00", () => {
-    expect(formatCurrency(0)).toBe("$0.00");
+  it("formats 0 cents as 0,00 €", () => {
+    expect(formatCurrency(0)).toBe("0,00\u00a0€");
   });
 
-  it("formats 99 cents as $0.99", () => {
-    expect(formatCurrency(99)).toBe("$0.99");
+  it("formats 99 cents as 0,99 €", () => {
+    expect(formatCurrency(99)).toBe("0,99\u00a0€");
   });
 
-  it("formats 1 cent as $0.01", () => {
-    expect(formatCurrency(1)).toBe("$0.01");
+  it("formats 1 cent as 0,01 €", () => {
+    expect(formatCurrency(1)).toBe("0,01\u00a0€");
   });
 
   it("formats large amounts correctly", () => {
-    expect(formatCurrency(1000000)).toBe("$10,000.00");
+    expect(formatCurrency(1000000)).toBe("10.000,00\u00a0€");
   });
 
-  it("formats 50 cents as $0.50", () => {
-    expect(formatCurrency(50)).toBe("$0.50");
+  it("formats 50 cents as 0,50 €", () => {
+    expect(formatCurrency(50)).toBe("0,50\u00a0€");
   });
 
-  it("formats 999 cents as $9.99", () => {
-    expect(formatCurrency(999)).toBe("$9.99");
+  it("formats 999 cents as 9,99 €", () => {
+    expect(formatCurrency(999)).toBe("9,99\u00a0€");
   });
 });
 

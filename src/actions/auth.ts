@@ -80,7 +80,13 @@ export async function signIn(
     .single();
 
   const role = (profile as { role: string } | null)?.role;
-  redirect(role === "contractor" ? "/contractor" : "/client");
+  redirect(
+    role === "admin"
+      ? "/admin"
+      : role === "contractor"
+        ? "/contractor"
+        : "/client"
+  );
 }
 
 export async function signOut() {

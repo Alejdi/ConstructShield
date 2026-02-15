@@ -1,17 +1,20 @@
 import { LoginForm } from "@/components/auth/login-form";
+import { getTranslations } from "next-intl/server";
 
 export const metadata = {
   title: "Sign In - ConstructShield",
   description: "Sign in to your ConstructShield account",
 };
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const t = await getTranslations();
+
   return (
     <div className="space-y-4">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold">Welcome back</h1>
+        <h1 className="text-2xl font-bold">{t("auth.welcomeBack")}</h1>
         <p className="text-sm text-muted-foreground">
-          Sign in to your account to continue
+          {t("auth.signInToContinue")}
         </p>
       </div>
       <LoginForm />

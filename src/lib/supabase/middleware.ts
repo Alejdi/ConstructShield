@@ -34,11 +34,28 @@ export async function updateSession(request: NextRequest) {
     !user &&
     (request.nextUrl.pathname.startsWith("/client") ||
       request.nextUrl.pathname.startsWith("/contractor") ||
+      request.nextUrl.pathname.startsWith("/admin") ||
       request.nextUrl.pathname.startsWith("/settings"))
   ) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
+  }
+
+  // Protect admin routes: only admin role can access
+  if (user && request.nextUrl.pathname.startsWith("/admin")) {
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    const role = (profileData as { role: string } | null)?.role;
+    if (role !== "admin") {
+      const url = request.nextUrl.clone();
+      url.pathname = role === "contractor" ? "/contractor" : "/client";
+      return NextResponse.redirect(url);
+    }
   }
 
   // Redirect authenticated users away from auth pages
@@ -47,8 +64,20 @@ export async function updateSession(request: NextRequest) {
     (request.nextUrl.pathname.startsWith("/login") ||
       request.nextUrl.pathname.startsWith("/signup"))
   ) {
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    const role = (profileData as { role: string } | null)?.role;
     const url = request.nextUrl.clone();
-    url.pathname = "/client";
+    url.pathname =
+      role === "admin"
+        ? "/admin"
+        : role === "contractor"
+          ? "/contractor"
+          : "/client";
     return NextResponse.redirect(url);
   }
 

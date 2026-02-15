@@ -1,15 +1,18 @@
+import Image from "next/image";
+
 export default function DashboardLoading() {
   return (
-    <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-32 animate-pulse rounded-xl border bg-muted"
-          />
-        ))}
+    <div className="flex h-64 items-center justify-center">
+      <div className="border-spinner relative flex items-center justify-center rounded-full p-3">
+        <Image
+          src="/images/logo.png"
+          alt="ConstructShield"
+          width={48}
+          height={48}
+          className="logo-loader"
+          priority
+        />
       </div>
-      <div className="h-96 animate-pulse rounded-xl border bg-muted" />
     </div>
   );
 }

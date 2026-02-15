@@ -18,10 +18,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CreditCard, CheckCircle } from "lucide-react";
+import { LocationPicker } from "@/components/location/location-picker";
+import { useTranslations } from "next-intl";
 
 const initialState: ProfileState = { error: null };
 
 export default function ContractorOnboardingPage() {
+  const t = useTranslations();
   const [profileState, profileAction, isProfilePending] = useActionState(
     updateContractorProfile,
     initialState
@@ -50,18 +53,18 @@ export default function ContractorOnboardingPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Contractor Onboarding</h1>
+        <h1 className="text-2xl font-bold">{t("contractor.onboarding")}</h1>
         <p className="text-muted-foreground">
-          Complete your profile and connect payments
+          {t("contractor.completeProfile")}
         </p>
       </div>
 
       {/* Stripe Connect */}
       <Card>
         <CardHeader>
-          <CardTitle>Payment Setup</CardTitle>
+          <CardTitle>{t("contractor.paymentSetup")}</CardTitle>
           <CardDescription>
-            Connect your Stripe account to receive milestone payments
+            {t("contractor.connectPaymentDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -70,17 +73,17 @@ export default function ContractorOnboardingPage() {
               <CheckCircle className="h-5 w-5 text-trust-green" />
               <div>
                 <p className="font-medium text-trust-green">
-                  Stripe Connected Successfully
+                  {t("contractor.stripeConnected")}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  You can now receive milestone payments.
+                  {t("contractor.canReceivePayments")}
                 </p>
               </div>
             </div>
           ) : (
             <Button onClick={handleConnectStripe} disabled={isConnecting}>
-              <CreditCard className="mr-2 h-4 w-4" />
-              {isConnecting ? "Connecting..." : "Connect Stripe Account"}
+              <CreditCard className="me-2 h-4 w-4" />
+              {isConnecting ? t("contractor.connecting") : t("contractor.connectStripeAccount")}
             </Button>
           )}
         </CardContent>
@@ -89,9 +92,9 @@ export default function ContractorOnboardingPage() {
       {/* Business Profile */}
       <Card>
         <CardHeader>
-          <CardTitle>Business Details</CardTitle>
+          <CardTitle>{t("contractor.businessDetails")}</CardTitle>
           <CardDescription>
-            Tell clients about your construction business
+            {t("contractor.businessDetailsDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -103,61 +106,63 @@ export default function ContractorOnboardingPage() {
             )}
             {profileState.success && (
               <div className="rounded-md bg-trust-green/10 p-3 text-sm text-trust-green">
-                Profile updated successfully!
+                {t("contractor.profileUpdated")}
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="businessName">Business Name</Label>
+              <Label htmlFor="businessName">{t("contractor.businessName")}</Label>
               <Input
                 id="businessName"
                 name="businessName"
-                placeholder="Smith Construction LLC"
+                placeholder={t("contractor.businessNamePlaceholder")}
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="licenseNumber">License Number</Label>
+              <Label htmlFor="licenseNumber">{t("contractor.licenseNumber")}</Label>
               <Input
                 id="licenseNumber"
                 name="licenseNumber"
-                placeholder="License #12345"
+                placeholder={t("contractor.licenseNumberPlaceholder")}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bio">Bio</Label>
+              <Label htmlFor="bio">{t("contractor.bio")}</Label>
               <Textarea
                 id="bio"
                 name="bio"
-                placeholder="Tell clients about your experience and specialties..."
+                placeholder={t("contractor.bioPlaceholder")}
                 rows={4}
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="specialties">
-                Specialties (comma-separated)
+                {t("contractor.specialties")}
               </Label>
               <Input
                 id="specialties"
                 name="specialties"
-                placeholder="Roofing, Framing, Electrical"
+                placeholder={t("contractor.specialtiesPlaceholder")}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="serviceArea">Service Area</Label>
+              <Label htmlFor="serviceArea">{t("contractor.serviceArea")}</Label>
               <Input
                 id="serviceArea"
                 name="serviceArea"
-                placeholder="Greater Los Angeles Area"
+                placeholder={t("contractor.serviceAreaPlaceholder")}
               />
             </div>
 
+            <LocationPicker required />
+
             <Button type="submit" disabled={isProfilePending}>
-              {isProfilePending ? "Saving..." : "Save Profile"}
+              {isProfilePending ? t("services.saving") : t("contractor.saveProfile")}
             </Button>
           </form>
         </CardContent>

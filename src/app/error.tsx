@@ -1,8 +1,5 @@
 "use client";
 
-import { AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
 export default function RootError({
   error,
   reset,
@@ -11,17 +8,22 @@ export default function RootError({
   reset: () => void;
 }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 p-4 text-center">
-      <AlertTriangle className="h-16 w-16 text-destructive" />
+    <div className="flex min-h-screen flex-col items-center justify-center gap-8 p-4 text-center">
+      <p className="text-6xl font-black tracking-tight">Error</p>
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight">
+        <h1 className="text-2xl font-bold tracking-tight">
           Something went wrong
         </h1>
         {error.message && (
-          <p className="text-muted-foreground text-lg">{error.message}</p>
+          <p className="text-muted-foreground">{error.message}</p>
         )}
       </div>
-      <Button onClick={reset}>Try Again</Button>
+      <button
+        onClick={reset}
+        className="border border-foreground px-6 py-2.5 text-xs font-medium uppercase tracking-[0.2em] transition-colors hover:bg-foreground hover:text-background"
+      >
+        Try Again
+      </button>
     </div>
   );
 }

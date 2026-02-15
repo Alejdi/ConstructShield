@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { sendMessage } from "@/actions/messages";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ interface ChatPanelProps {
 }
 
 export function ChatPanel({ projectId }: ChatPanelProps) {
+  const t = useTranslations();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -98,7 +100,7 @@ export function ChatPanel({ projectId }: ChatPanelProps) {
 
       if (result.isFlagged) {
         toast.warning(
-          "To stay protected by our $1M Guarantee and Escrow, keep all payments and talk on ConstructShield.",
+          t("chat.escrowWarning"),
           {
             duration: 6000,
             icon: <AlertTriangle className="h-4 w-4" />,
@@ -107,7 +109,7 @@ export function ChatPanel({ projectId }: ChatPanelProps) {
       }
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : "Failed to send message"
+        err instanceof Error ? err.message : t("chat.sendFailed")
       );
     } finally {
       setIsSending(false);
@@ -116,11 +118,11 @@ export function ChatPanel({ projectId }: ChatPanelProps) {
 
   return (
     <div className="flex h-80 flex-col">
-      <ScrollArea className="flex-1 pr-4">
+      <ScrollArea className="flex-1 pe-4">
         <div className="space-y-3 py-2">
           {messages.length === 0 && (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              No messages yet. Start the conversation!
+              {t("chat.noMessages")}
             </p>
           )}
           {messages.map((msg) => {
@@ -136,7 +138,7 @@ export function ChatPanel({ projectId }: ChatPanelProps) {
               >
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span>
-                    {(msg.profiles as { full_name: string } | null)?.full_name ?? "User"}
+                    {(msg.profiles as { full_name: string } | null)?.full_name ?? t("chat.user")}
                   </span>
                   <span>{formatRelativeTime(msg.created_at)}</span>
                   {msg.is_flagged && (
@@ -144,7 +146,7 @@ export function ChatPanel({ projectId }: ChatPanelProps) {
                       variant="destructive"
                       className="h-4 px-1 text-[10px]"
                     >
-                      Filtered
+                      {t("chat.filtered")}
                     </Badge>
                   )}
                 </div>
@@ -168,7 +170,7 @@ export function ChatPanel({ projectId }: ChatPanelProps) {
         <Textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a message..."
+          placeholder={t("chat.placeholder")}
           rows={1}
           className="min-h-[40px] resize-none"
           onKeyDown={(e) => {

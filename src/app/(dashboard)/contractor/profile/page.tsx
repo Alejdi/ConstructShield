@@ -11,12 +11,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 export const metadata = {
   title: "My Profile - ConstructShield",
 };
 
 export default async function ContractorProfilePage() {
+  const t = await getTranslations();
   const supabase = await createClient();
   const {
     data: { user },
@@ -56,15 +58,15 @@ export default async function ContractorProfilePage() {
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">My Profile</h1>
+          <h1 className="text-2xl font-bold">{t("contractor.myProfile")}</h1>
           <p className="text-muted-foreground">
-            How clients see your business
+            {t("contractor.howClientsSee")}
           </p>
         </div>
         <Button variant="outline" asChild>
           <Link href={`/contractors/${user.id}`}>
-            <ExternalLink className="mr-2 h-4 w-4" />
-            View Public Profile
+            <ExternalLink className="me-2 h-4 w-4" />
+            {t("contractor.viewPublicProfile")}
           </Link>
         </Button>
       </div>
@@ -73,13 +75,13 @@ export default async function ContractorProfilePage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>{contractor?.business_name || "Not set"}</CardTitle>
+              <CardTitle>{contractor?.business_name || t("common.notSet")}</CardTitle>
               <CardDescription>{profile?.full_name}</CardDescription>
             </div>
             {contractor?.verified && (
               <Badge className="bg-trust-green/10 text-trust-green">
-                <ShieldCheck className="mr-1 h-3 w-3" />
-                Verified
+                <ShieldCheck className="me-1 h-3 w-3" />
+                {t("contractor.verified")}
               </Badge>
             )}
           </div>
@@ -88,21 +90,21 @@ export default async function ContractorProfilePage() {
           {contractor?.license_number && (
             <div>
               <p className="text-sm font-medium text-muted-foreground">
-                License Number
+                {t("contractor.licenseNumber")}
               </p>
               <p>{contractor.license_number}</p>
             </div>
           )}
           {contractor?.bio && (
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Bio</p>
+              <p className="text-sm font-medium text-muted-foreground">{t("contractor.bio")}</p>
               <p>{contractor.bio}</p>
             </div>
           )}
           {contractor?.specialties && contractor.specialties.length > 0 && (
             <div>
               <p className="text-sm font-medium text-muted-foreground">
-                Specialties
+                {t("contractor.specialties")}
               </p>
               <div className="mt-1 flex flex-wrap gap-2">
                 {contractor.specialties.map((s) => (
@@ -116,14 +118,14 @@ export default async function ContractorProfilePage() {
           {contractor?.service_area && (
             <div>
               <p className="text-sm font-medium text-muted-foreground">
-                Service Area
+                {t("contractor.serviceArea")}
               </p>
               <p>{contractor.service_area}</p>
             </div>
           )}
 
           <Button asChild>
-            <Link href="/contractor/onboarding">Edit Profile</Link>
+            <Link href="/contractor/onboarding">{t("contractor.editProfile")}</Link>
           </Button>
         </CardContent>
       </Card>

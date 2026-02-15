@@ -1,19 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { FolderOpen, PlusCircle, DollarSign, Clock } from "lucide-react";
+import { FolderOpen, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
-import { PROJECT_STATUS_LABELS } from "@/lib/constants";
 import type { ProjectStatus, MilestoneStatus } from "@/lib/types/database";
+import { NearbyActivity } from "@/components/location/nearby-activity";
+import { ProjectListFilter } from "@/components/projects/project-list-filter";
+import { getTranslations } from "next-intl/server";
 
 type ProjectWithMilestones = {
   id: string;
@@ -21,6 +14,7 @@ type ProjectWithMilestones = {
   total_budget: number;
   status: ProjectStatus;
   milestones: { id: string; status: MilestoneStatus; amount: number }[] | null;
+  bids: { id: string; status: string }[] | null;
 };
 
 export const metadata = {
@@ -28,6 +22,7 @@ export const metadata = {
 };
 
 export default async function ClientDashboardPage() {
+  const t = await getTranslations();
   const supabase = await createClient();
   const {
     data: { user },
@@ -37,7 +32,7 @@ export default async function ClientDashboardPage() {
 
   const { data } = await supabase
     .from("projects")
-    .select("id, title, total_budget, status, milestones(id, status, amount)")
+    .select("id, title, total_budget, status, milestones(id, status, amount), bids(id, status)")
     .eq("client_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -59,116 +54,87 @@ export default async function ClientDashboardPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Client Dashboard</h1>
-          <p className="text-muted-foreground">
-            Manage your construction projects
+          <h1 className="text-3xl font-bold tracking-tight">{t("nav.dashboard")}</h1>
+          <p className="text-sm text-muted-foreground">
+            {t("projects.manageProjects")}
           </p>
         </div>
-        <Button asChild>
-          <Link href="/client/projects/new">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            New Project
-          </Link>
-        </Button>
+        <Link
+          href="/client/projects/new"
+          className="inline-flex items-center gap-2 border border-foreground px-5 py-2.5 text-xs font-medium uppercase tracking-[0.15em] transition-colors hover:bg-foreground hover:text-background"
+        >
+          <PlusCircle className="h-4 w-4" />
+          {t("nav.newProject")}
+        </Link>
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Projects
-            </CardTitle>
-            <FolderOpen className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalProjects}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Active</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{activeProjects}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Budget</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatCurrency(totalBudget)}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Active Milestones
-            </CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{activeMilestones}</div>
-          </CardContent>
-        </Card>
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="space-y-1 border-t pt-4">
+          <p className="text-4xl font-black tracking-tight">{totalProjects}</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            {t("projects.totalProjects")}
+          </p>
+        </div>
+        <div className="space-y-1 border-t pt-4">
+          <p className="text-4xl font-black tracking-tight">{activeProjects}</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            {t("projects.active")}
+          </p>
+        </div>
+        <div className="space-y-1 border-t pt-4">
+          <p className="text-4xl font-black tracking-tight">
+            {formatCurrency(totalBudget)}
+          </p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            {t("projects.totalBudget")}
+          </p>
+        </div>
+        <div className="space-y-1 border-t pt-4">
+          <p className="text-4xl font-black tracking-tight">
+            {activeMilestones}
+          </p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            {t("projects.activeMilestones")}
+          </p>
+        </div>
       </div>
 
+      {/* Nearby Activity */}
+      <NearbyActivity />
+
       {/* Project List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Projects</CardTitle>
-          <CardDescription>
+      <div>
+        <div className="mb-4">
+          <h2 className="text-lg font-bold">{t("projects.yourProjects")}</h2>
+          <p className="text-sm text-muted-foreground">
             {totalProjects === 0
-              ? "You haven't created any projects yet."
-              : `You have ${totalProjects} project${totalProjects > 1 ? "s" : ""}.`}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {totalProjects === 0 ? (
-            <div className="flex flex-col items-center gap-4 py-8">
-              <FolderOpen className="h-12 w-12 text-muted-foreground/50" />
-              <p className="text-sm text-muted-foreground">
-                Create your first project to get started
-              </p>
-              <Button asChild>
-                <Link href="/client/projects/new">
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  New Project
-                </Link>
-              </Button>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {projects?.map((project) => (
-                <Link
-                  key={project.id}
-                  href={`/client/projects/${project.id}`}
-                  className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted/50"
-                >
-                  <div>
-                    <h3 className="font-medium">{project.title}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {formatCurrency(project.total_budget)} &middot;{" "}
-                      {project.milestones?.length ?? 0} milestones
-                    </p>
-                  </div>
-                  <Badge variant="secondary">
-                    {PROJECT_STATUS_LABELS[project.status]}
-                  </Badge>
-                </Link>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+              ? t("projects.noProjectsYet")
+              : t("projects.projectCount", { count: totalProjects })}
+          </p>
+        </div>
+
+        {totalProjects === 0 ? (
+          <div className="flex flex-col items-center gap-4 border-t py-16">
+            <FolderOpen className="h-12 w-12 text-muted-foreground/30" />
+            <p className="text-sm text-muted-foreground">
+              {t("projects.createFirstProject")}
+            </p>
+            <Link
+              href="/client/projects/new"
+              className="inline-flex items-center gap-2 border border-foreground px-5 py-2.5 text-xs font-medium uppercase tracking-[0.15em] transition-colors hover:bg-foreground hover:text-background"
+            >
+              <PlusCircle className="h-4 w-4" />
+              {t("nav.newProject")}
+            </Link>
+          </div>
+        ) : (
+          <ProjectListFilter projects={projects} />
+        )}
+      </div>
     </div>
   );
 }

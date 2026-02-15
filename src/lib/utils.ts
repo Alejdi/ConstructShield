@@ -6,9 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(cents: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("de-DE", {
     style: "currency",
-    currency: "USD",
+    currency: "EUR",
   }).format(cents / 100);
 }
 
@@ -33,4 +33,21 @@ export function formatRelativeTime(date: string | Date): string {
   if (diffHours < 24) return `${diffHours}h ago`;
   if (diffDays < 7) return `${diffDays}d ago`;
   return formatDate(date);
+}
+
+export function formatDistance(meters: number): string {
+  if (meters < 1000) return `${Math.round(meters)} m`;
+  return `${(meters / 1000).toFixed(1)} km`;
+}
+
+export function calculateTravelFee(distanceMeters: number): number {
+  if (distanceMeters < 10000) return 0;
+  if (distanceMeters < 30000) return 7500;
+  return 15000;
+}
+
+export function getTravelFeeLabel(distanceMeters: number): string {
+  if (distanceMeters < 10000) return "€0 travel fee";
+  if (distanceMeters < 30000) return "~€75 travel fee";
+  return "~€150 travel fee";
 }

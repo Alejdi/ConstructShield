@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Upload, Camera, CheckCircle, Loader2 } from "lucide-react";
@@ -16,6 +17,7 @@ export function VideoUploader({
   referenceId,
   onUploadComplete,
 }: VideoUploaderProps) {
+  const t = useTranslations();
   const [status, setStatus] = useState<
     "idle" | "preparing" | "uploading" | "complete"
   >("idle");
@@ -47,11 +49,11 @@ export function VideoUploader({
       });
 
       setStatus("complete");
-      toast.success("Video uploaded! Processing will take a moment.");
+      toast.success(t("video.processing"));
       onUploadComplete?.();
     } catch {
       setStatus("idle");
-      toast.error("Upload failed. Please try again.");
+      toast.error(t("video.uploadFailed"));
     }
   }
 
@@ -60,7 +62,7 @@ export function VideoUploader({
       <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed p-8">
         <CheckCircle className="h-10 w-10 text-trust-green" />
         <p className="text-sm font-medium text-trust-green">
-          Upload complete! Video is processing.
+          {t("video.uploadComplete")}
         </p>
       </div>
     );
@@ -81,7 +83,7 @@ export function VideoUploader({
         <>
           <Loader2 className="h-10 w-10 animate-spin text-brand-600" />
           <p className="text-sm text-muted-foreground">
-            {status === "preparing" ? "Preparing upload..." : "Uploading video..."}
+            {status === "preparing" ? t("video.preparing") : t("video.uploading")}
           </p>
         </>
       ) : (
@@ -94,7 +96,7 @@ export function VideoUploader({
             >
               <div className="flex flex-col items-center gap-1">
                 <Upload className="h-6 w-6" />
-                <span className="text-xs">Choose File</span>
+                <span className="text-xs">{t("video.chooseFile")}</span>
               </div>
             </Button>
             <Button
@@ -103,12 +105,12 @@ export function VideoUploader({
             >
               <div className="flex flex-col items-center gap-1">
                 <Camera className="h-6 w-6" />
-                <span className="text-xs">Record</span>
+                <span className="text-xs">{t("video.record")}</span>
               </div>
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
-            Record or upload a video showing the completed work
+            {t("video.recordDesc")}
           </p>
         </>
       )}

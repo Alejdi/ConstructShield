@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PlusCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const initialState: MilestoneState = { error: null };
 
@@ -18,6 +19,7 @@ export function AddMilestoneForm({
   projectId,
   nextOrderIndex,
 }: AddMilestoneFormProps) {
+  const t = useTranslations();
   const [state, formAction, isPending] = useActionState(
     createMilestone,
     initialState
@@ -25,7 +27,7 @@ export function AddMilestoneForm({
 
   return (
     <form action={formAction} className="space-y-3">
-      <h4 className="font-medium">Add Milestone</h4>
+      <h4 className="font-medium">{t("milestones.addMilestone")}</h4>
 
       {state.error && (
         <div className="rounded-md bg-danger-red/10 p-3 text-sm text-danger-red">
@@ -38,40 +40,40 @@ export function AddMilestoneForm({
 
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="title">Title</Label>
+          <Label htmlFor="title">{t("milestones.milestoneTitle")}</Label>
           <Input
             id="title"
             name="title"
-            placeholder="Foundation work"
+            placeholder={t("milestones.milestoneTitlePlaceholder")}
             required
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="amount">Amount ($)</Label>
+          <Label htmlFor="amount">{t("milestones.amount")}</Label>
           <Input
             id="amount"
             name="amount"
             type="number"
             step="0.01"
             min="1"
-            placeholder="5000"
+            placeholder={t("milestones.amountPlaceholder")}
             required
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description">Description (optional)</Label>
+        <Label htmlFor="description">{t("milestones.descriptionOptional")}</Label>
         <Input
           id="description"
           name="description"
-          placeholder="Describe what work is included..."
+          placeholder={t("milestones.descriptionPlaceholder")}
         />
       </div>
 
       <Button type="submit" variant="outline" disabled={isPending}>
-        <PlusCircle className="mr-2 h-4 w-4" />
-        {isPending ? "Adding..." : "Add Milestone"}
+        <PlusCircle className="me-2 h-4 w-4" />
+        {isPending ? t("milestones.adding") : t("milestones.addMilestone")}
       </Button>
     </form>
   );

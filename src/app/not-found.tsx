@@ -1,20 +1,23 @@
 import Link from "next/link";
-import { Shield } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { getTranslations } from "next-intl/server";
 
-export default function NotFound() {
+export default async function NotFound() {
+  const t = await getTranslations();
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 p-4 text-center">
-      <Shield className="h-16 w-16 text-muted-foreground" />
+    <div className="flex min-h-screen flex-col items-center justify-center gap-8 p-4 text-center">
+      <p className="text-8xl font-black tracking-tight">{t("errors.error404")}</p>
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight">Page Not Found</h1>
-        <p className="text-muted-foreground text-lg">
-          The page you are looking for does not exist or has been moved.
+        <h1 className="text-2xl font-bold tracking-tight">{t("errors.pageNotFound")}</h1>
+        <p className="text-muted-foreground">
+          {t("errors.pageNotFoundDesc")}
         </p>
       </div>
-      <Button asChild>
-        <Link href="/">Go Home</Link>
-      </Button>
+      <Link
+        href="/"
+        className="border border-foreground px-6 py-2.5 text-xs font-medium uppercase tracking-[0.2em] transition-colors hover:bg-foreground hover:text-background"
+      >
+        {t("common.goHome")}
+      </Link>
     </div>
   );
 }

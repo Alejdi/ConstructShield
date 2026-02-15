@@ -7,12 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RoleSelector } from "./role-selector";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const initialState: AuthState = { error: null };
 
 export function SignupForm() {
   const [state, formAction, isPending] = useActionState(signUp, initialState);
   const [role, setRole] = useState<"client" | "contractor">("client");
+  const t = useTranslations();
 
   return (
     <form action={formAction} className="space-y-4">
@@ -23,42 +25,42 @@ export function SignupForm() {
       )}
 
       <div className="space-y-2">
-        <Label>I am a...</Label>
+        <Label>{t("auth.iAmA")}</Label>
         <RoleSelector value={role} onChange={setRole} />
         <input type="hidden" name="role" value={role} />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="fullName">Full Name</Label>
+        <Label htmlFor="fullName">{t("auth.fullName")}</Label>
         <Input
           id="fullName"
           name="fullName"
           type="text"
-          placeholder="John Smith"
+          placeholder={t("auth.fullNamePlaceholder")}
           required
           autoComplete="name"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("auth.email")}</Label>
         <Input
           id="email"
           name="email"
           type="email"
-          placeholder="you@example.com"
+          placeholder={t("auth.emailPlaceholder")}
           required
           autoComplete="email"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">{t("auth.password")}</Label>
         <Input
           id="password"
           name="password"
           type="password"
-          placeholder="At least 8 characters"
+          placeholder={t("auth.passwordMinChars")}
           required
           minLength={8}
           autoComplete="new-password"
@@ -66,13 +68,13 @@ export function SignupForm() {
       </div>
 
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Creating account..." : "Create Account"}
+        {isPending ? t("auth.creatingAccount") : t("auth.createAccount")}
       </Button>
 
       <p className="text-center text-sm text-muted-foreground">
-        Already have an account?{" "}
+        {t("auth.alreadyHaveAccount")}{" "}
         <Link href="/login" className="text-brand-600 hover:underline">
-          Sign in
+          {t("auth.signIn")}
         </Link>
       </p>
     </form>
