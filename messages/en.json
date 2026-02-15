@@ -143,14 +143,14 @@
     "projectTitlePlaceholder": "Kitchen Renovation",
     "description": "Description",
     "descriptionPlaceholder": "Describe the scope of work...",
-    "totalBudgetField": "Total Budget (€)",
+    "totalBudgetField": "Total Budget (â‚¬)",
     "budgetPlaceholder": "25000",
     "creating": "Creating...",
     "createProject": "Create Project",
     "milestoneTotal": "Milestone Total",
     "released": "Released",
     "projectChat": "Project Chat",
-    "chatDescription": "Communicate with your contractor — all payments should stay on ConstructShield",
+    "chatDescription": "Communicate with your contractor â€” all payments should stay on ConstructShield",
     "projectComplete": "Project Complete",
     "projectCompleteDesc": "All milestones have been released. Mark this project as completed to leave a review.",
     "completedMsg": "Project marked as completed!",
@@ -195,7 +195,7 @@
     "addMilestone": "Add Milestone",
     "milestoneTitle": "Title",
     "milestoneTitlePlaceholder": "Foundation work",
-    "amount": "Amount (€)",
+    "amount": "Amount (â‚¬)",
     "amountPlaceholder": "5000",
     "descriptionOptional": "Description (optional)",
     "descriptionPlaceholder": "Describe what work is included...",
@@ -240,8 +240,8 @@
       "withdrawn": "Withdrawn"
     },
     "bidSubmitted": "Your bid has been submitted successfully.",
-    "yourBid": "Your Bid (€)",
-    "clientBudget": "Client's budget: €{budget}",
+    "yourBid": "Your Bid (â‚¬)",
+    "clientBudget": "Client's budget: â‚¬{budget}",
     "proposal": "Proposal",
     "proposalPlaceholder": "Describe your approach, timeline, and why you're the right fit...",
     "submitting": "Submitting...",
@@ -304,7 +304,7 @@
     "serviceDescPlaceholder": "Describe what's included in this service...",
     "category": "Category",
     "selectCategory": "Select a category",
-    "startingPrice": "Starting Price (€)",
+    "startingPrice": "Starting Price (â‚¬)",
     "pricePlaceholder": "5000",
     "saving": "Saving...",
     "marketplace": "Marketplace",
@@ -352,7 +352,7 @@
     "activatedSuccess": "Subscription activated successfully!",
     "currentPlan": "Current Plan",
     "active": "Active",
-    "trialDaysLeft": "Trial · {days} day(s) left",
+    "trialDaysLeft": "Trial Â· {days} day(s) left",
     "inactive": "Inactive",
     "trialExpired": "Trial Expired",
     "renewsOn": "Renews on {date}",
@@ -432,9 +432,9 @@
     "user": "User",
     "filtered": "Filtered",
     "placeholder": "Type a message...",
-    "escrowWarning": "To stay protected by our €1M Guarantee and Escrow, keep all payments and talk on ConstructShield.",
+    "escrowWarning": "To stay protected by our â‚¬1M Guarantee and Escrow, keep all payments and talk on ConstructShield.",
     "sendFailed": "Failed to send message",
-    "chatDesc": "Communicate with the client — all payments should stay on ConstructShield",
+    "chatDesc": "Communicate with the client â€” all payments should stay on ConstructShield",
     "messageEmpty": "Message cannot be empty",
     "sendMessage": "Send Message"
   },
@@ -527,7 +527,7 @@
     "noOpenDisputes": "No open disputes",
     "allResolved": "All disputes have been resolved",
     "disputeCount": "{count} project(s) requiring resolution",
-    "budgetClientContractor": "Budget: {budget} · Client: {client} · Contractor: {contractor}",
+    "budgetClientContractor": "Budget: {budget} Â· Client: {client} Â· Contractor: {contractor}",
     "paymentHeld": "Payment held",
     "usersTitle": "Users",
     "userCount": "{count} registered user(s)",
@@ -580,7 +580,14 @@
     "avatarHint": "JPG, PNG or WebP. Max 5 MB.",
     "avatarUpdated": "Profile photo updated!",
     "avatarFailed": "Failed to upload photo",
-    "avatarTooLarge": "Image must be under 2 MB"
+    "avatarTooLarge": "Image must be under 2 MB",
+    "theme": {
+      "title": "Appearance",
+      "description": "Choose your preferred color theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
   },
   "inbox": {
     "title": "Inbox",
@@ -605,8 +612,8 @@
     "highestBudget": "Highest Budget",
     "lowestBudget": "Lowest Budget",
     "searchJobs": "Search jobs...",
-    "minBudget": "Min (€)",
-    "maxBudget": "Max (€)",
+    "minBudget": "Min (â‚¬)",
+    "maxBudget": "Max (â‚¬)",
     "sortBy": "Sort by",
     "budget": "Budget",
     "backToJobBoard": "Back to Job Board",
@@ -660,10 +667,10 @@
   },
   "nearbyCta": {
     "buildersNearby": "There is/are {count} Verified Builder(s) working near you today.",
-    "activeProjects": "{count} active project(s) nearby — watch their live progress.",
+    "activeProjects": "{count} active project(s) nearby â€” watch their live progress.",
     "seeWhos": "See Who's Building",
     "activeNearby": "Active Nearby",
-    "contractorNearby": "{name} · {distance} away"
+    "contractorNearby": "{name} Â· {distance} away"
   },
   "video": {
     "uploadComplete": "Upload complete! Video is processing.",
@@ -678,8 +685,8 @@
   "filters": {
     "searchPlaceholder": "Search...",
     "all": "All",
-    "minPlaceholder": "Min (€)",
-    "maxPlaceholder": "Max (€)",
+    "minPlaceholder": "Min (â‚¬)",
+    "maxPlaceholder": "Max (â‚¬)",
     "clear": "Clear"
   },
   "disputes": {
@@ -707,5 +714,11 @@
     "showList": "List",
     "projectLocation": "Project Location",
     "contractorLocation": "Contractor Location"
+  },
+  "pwa": {
+    "installTitle": "Install ConstructShield",
+    "installDesc": "Add to your home screen for quick access",
+    "install": "Install",
+    "dismiss": "Dismiss"
   }
 }

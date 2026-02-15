@@ -19,7 +19,7 @@
     "tryAgain": "Покушај поново",
     "allRightsReserved": "Сва права задржана.",
     "account": "{role} налог",
-    "anonymous": "Анониман",
+    "anonymous": "Анониман",
     "changeLanguage": "Промени језик"
   },
   "errors": {
@@ -580,7 +580,14 @@
     "avatarHint": "JPG, PNG или WebP. Макс. 5 MB.",
     "avatarUpdated": "Фотографија профила је ажурирана!",
     "avatarFailed": "Отпремање фотографије није успело",
-    "avatarTooLarge": "Слика мора бити мања од 2 MB"
+    "avatarTooLarge": "Слика мора бити мања од 2 MB",
+    "theme": {
+      "title": "Izgled",
+      "description": "Izaberite zeljenu temu boja",
+      "light": "Svetla",
+      "dark": "Tamna",
+      "system": "Sistem"
+    }
   },
   "inbox": {
     "title": "Пријемно сандуче",
@@ -707,5 +714,11 @@
     "showList": "Листа",
     "projectLocation": "Локација пројекта",
     "contractorLocation": "Локација извођача"
+  },
+  "pwa": {
+    "installTitle": "Инсталирај ConstructShield",
+    "installDesc": "Додај на почетни екран за брз приступ",
+    "install": "Инсталирај",
+    "dismiss": "Затвори"
   }
 }

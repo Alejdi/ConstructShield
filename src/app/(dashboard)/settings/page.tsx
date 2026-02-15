@@ -10,6 +10,7 @@ import {
 import { NotificationPreferences } from "@/components/notifications/notification-preferences";
 import { PushToggle } from "@/components/notifications/push-toggle";
 import { AvatarUpload } from "@/components/settings/avatar-upload";
+import { ThemeToggle } from "@/components/settings/theme-toggle";
 import { getTranslations } from "next-intl/server";
 
 export const metadata = {
@@ -81,6 +82,16 @@ export default async function SettingsPage() {
             <p className="text-sm font-medium text-muted-foreground">{t("settings.role")}</p>
             <p className="capitalize">{profile?.role}</p>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("settings.theme.title")}</CardTitle>
+          <CardDescription>{t("settings.theme.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ThemeToggle />
         </CardContent>
       </Card>
 

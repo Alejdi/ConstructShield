@@ -8,6 +8,9 @@ import { notify } from "@/lib/notifications";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { formatCurrency } from "@/lib/utils";
 import type { SubscriptionTier } from "@/lib/types/database";
+import { createRateLimiter } from "@/lib/rate-limit";
+
+const bidLimiter = createRateLimiter({ maxRequests: 10, windowMs: 60_000 });
 
 const submitBidSchema = z.object({
   projectId: z.string().uuid(),
@@ -30,6 +33,12 @@ export async function submitBid(
   } = await supabase.auth.getUser();
 
   if (!user) return { error: "Unauthorized" };
+
+  try {
+    bidLimiter.check(user.id);
+  } catch {
+    return { error: "Too many requests. Please try again later." };
+  }
 
   const { data: profileData } = await supabase
     .from("profiles")

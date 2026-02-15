@@ -160,16 +160,16 @@
     "projectNotActive": "Le projet n'est pas actif",
     "allMilestonesRequired": "Toutes les Ã©tapes doivent Ãªtre libÃ©rÃ©es avant de pouvoir finaliser",
     "draftTitle": "Ce projet est un brouillon",
-    "draftDesc": "Ajoutez des \u00e9tapes et des images, puis publiez sur le tableau des offres.",
+    "draftDesc": "Ajoutez des étapes et des images, puis publiez sur le tableau des offres.",
     "publish": "Publier",
     "publishing": "Publication...",
-    "publishedMsg": "Projet publi\u00e9 sur le tableau des offres !",
-    "publishFailed": "\u00c9chec de la publication du projet",
+    "publishedMsg": "Projet publié sur le tableau des offres !",
+    "publishFailed": "Échec de la publication du projet",
     "deleteConfirm": "Supprimer ce projet ?",
-    "deleteConfirmDesc": "Le projet \"{title}\" et tous ses jalons, offres et images seront d\u00e9finitivement supprim\u00e9s. Cette action est irr\u00e9versible.",
+    "deleteConfirmDesc": "Le projet \"{title}\" et tous ses jalons, offres et images seront définitivement supprimés. Cette action est irréversible.",
     "deleting": "Suppression...",
-    "deletedMsg": "Projet supprim\u00e9 avec succ\u00e8s.",
-    "deleteFailed": "\u00c9chec de la suppression du projet",
+    "deletedMsg": "Projet supprimé avec succès.",
+    "deleteFailed": "Échec de la suppression du projet",
     "editProject": "Modifier le projet",
     "editProjectDesc": "Mettez à jour les détails de votre projet",
     "editDetails": "Modifiez les détails de votre projet de construction",
@@ -225,12 +225,12 @@
     "proofSubmitted": "Preuve soumise",
     "invalidState": "Ã‰tat invalide",
     "contractorNoStripe": "L'entrepreneur n'a pas connectÃ© Stripe",
-    "noPaymentHold": "Aucune retenue de paiement trouv\u00e9e",
+    "noPaymentHold": "Aucune retenue de paiement trouvée",
     "deleteConfirm": "Supprimer ce jalon ?",
-    "deleteConfirmDesc": "Le jalon \"{title}\" sera d\u00e9finitivement supprim\u00e9. Cette action est irr\u00e9versible.",
+    "deleteConfirmDesc": "Le jalon \"{title}\" sera définitivement supprimé. Cette action est irréversible.",
     "deleting": "Suppression...",
-    "deletedMsg": "Jalon supprim\u00e9.",
-    "deleteFailed": "\u00c9chec de la suppression du jalon"
+    "deletedMsg": "Jalon supprimé.",
+    "deleteFailed": "Échec de la suppression du jalon"
   },
   "bids": {
     "status": {
@@ -580,7 +580,14 @@
     "avatarHint": "JPG, PNG ou WebP. Max 5 Mo.",
     "avatarUpdated": "Photo de profil mise à jour !",
     "avatarFailed": "Échec du téléchargement de la photo",
-    "avatarTooLarge": "L'image doit faire moins de 2 Mo"
+    "avatarTooLarge": "L'image doit faire moins de 2 Mo",
+    "theme": {
+      "title": "Apparence",
+      "description": "Choisissez votre theme de couleur prefere",
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Systeme"
+    }
   },
   "inbox": {
     "title": "BoÃ®te de rÃ©ception",
@@ -707,5 +714,11 @@
     "showList": "Liste",
     "projectLocation": "Emplacement du projet",
     "contractorLocation": "Emplacement de l'entreprise"
+  },
+  "pwa": {
+    "installTitle": "Installer ConstructShield",
+    "installDesc": "Ajouter à l'écran d'accueil pour un accès rapide",
+    "install": "Installer",
+    "dismiss": "Fermer"
   }
 }

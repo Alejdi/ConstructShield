@@ -20,7 +20,7 @@
     "allRightsReserved": "جميع الحقوق محفوظة.",
     "account": "حساب {role}",
     "anonymous": "مجهول",
-    "changeLanguage": "\u062A\u063A\u064A\u064A\u0631 \u0627\u0644\u0644\u063A\u0629"
+    "changeLanguage": "تغيير اللغة"
   },
   "errors": {
     "unauthorized": "غير مصرّح",
@@ -580,7 +580,14 @@
     "avatarHint": "JPG أو PNG أو WebP. الحد الأقصى 5 ميجابايت.",
     "avatarUpdated": "تم تحديث صورة الملف الشخصي!",
     "avatarFailed": "فشل رفع الصورة",
-    "avatarTooLarge": "يجب أن تكون الصورة أقل من 2 ميجابايت"
+    "avatarTooLarge": "يجب أن تكون الصورة أقل من 2 ميجابايت",
+    "theme": {
+      "title": "المظهر",
+      "description": "اختر سمة اللون المفضلة لديك",
+      "light": "فاتح",
+      "dark": "داكن",
+      "system": "النظام"
+    }
   },
   "inbox": {
     "title": "صندوق الوارد",
@@ -708,5 +715,11 @@
     "showList": "القائمة",
     "projectLocation": "موقع المشروع",
     "contractorLocation": "موقع المقاول"
+  },
+  "pwa": {
+    "installTitle": "تثبيت ConstructShield",
+    "installDesc": "أضف إلى الشاشة الرئيسية للوصول السريع",
+    "install": "تثبيت",
+    "dismiss": "إغلاق"
   }
 }

@@ -3,6 +3,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { notify } from "@/lib/notifications";
 import { filterMessage } from "@/lib/chat/filter";
+import { createRateLimiter } from "@/lib/rate-limit";
+
+const dmLimiter = createRateLimiter({ maxRequests: 20, windowMs: 60_000 });
 
 export async function getConversations() {
   const supabase = await createClient();
@@ -127,6 +130,7 @@ export async function sendDirectMessage(
   } = await supabase.auth.getUser();
 
   if (!user) throw new Error("Unauthorized");
+  dmLimiter.check(user.id);
   if (!content.trim()) throw new Error("Message cannot be empty");
 
   const filterResult = filterMessage(content);

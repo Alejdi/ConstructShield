@@ -1,5 +1,8 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
+import { useEffect } from "react";
+
 export default function RootError({
   error,
   reset,
@@ -7,6 +10,10 @@ export default function RootError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-8 p-4 text-center">
       <p className="text-6xl font-black tracking-tight">Error</p>

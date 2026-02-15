@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
+import Image from "next/image";
 import { Navigation, MapPin } from "lucide-react";
 import { SEARCH_RADIUS_OPTIONS } from "@/lib/constants";
 import { formatDistance, formatCurrency, cn } from "@/lib/utils";
@@ -174,11 +175,13 @@ function NearbyJobCard({ job, selected }: { job: NearbyJob; selected?: boolean }
     >
       <div className="flex items-start gap-4">
         {job.thumbnail_url && (
-          <div className="hidden h-20 w-20 shrink-0 overflow-hidden rounded border sm:block">
-            <img
+          <div className="relative hidden h-20 w-20 shrink-0 overflow-hidden rounded border sm:block">
+            <Image
               src={job.thumbnail_url}
               alt=""
-              className="h-full w-full object-cover"
+              fill
+              sizes="80px"
+              className="object-cover"
             />
           </div>
         )}

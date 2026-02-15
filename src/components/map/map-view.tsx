@@ -1,6 +1,8 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
+import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
+import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
 import { useEffect, useMemo } from "react";
 import {
   MapContainer,
@@ -10,6 +12,7 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 
 // Fix Leaflet default marker icons (broken by bundlers)
@@ -111,22 +114,24 @@ export function MapView({
         />
         {stableMarkers.length > 0 && <FitBounds markers={stableMarkers} />}
         {onMapClick && <MapClickHandler onClick={onMapClick} />}
-        {stableMarkers.map((marker) => (
-          <Marker
-            key={marker.id}
-            position={marker.position}
-            eventHandlers={
-              onMarkerClick
-                ? { click: () => onMarkerClick(marker.id) }
-                : undefined
-            }
-            opacity={
-              selectedMarkerId && selectedMarkerId !== marker.id ? 0.5 : 1
-            }
-          >
-            {marker.label && <Popup>{marker.label}</Popup>}
-          </Marker>
-        ))}
+        <MarkerClusterGroup chunkedLoading maxClusterRadius={50}>
+          {stableMarkers.map((marker) => (
+            <Marker
+              key={marker.id}
+              position={marker.position}
+              eventHandlers={
+                onMarkerClick
+                  ? { click: () => onMarkerClick(marker.id) }
+                  : undefined
+              }
+              opacity={
+                selectedMarkerId && selectedMarkerId !== marker.id ? 0.5 : 1
+              }
+            >
+              {marker.label && <Popup>{marker.label}</Popup>}
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
       </MapContainer>
     </div>
   );

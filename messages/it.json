@@ -580,7 +580,14 @@
     "avatarHint": "JPG, PNG o WebP. Max 5 MB.",
     "avatarUpdated": "Foto profilo aggiornata!",
     "avatarFailed": "Caricamento foto fallito",
-    "avatarTooLarge": "L'immagine deve essere inferiore a 2 MB"
+    "avatarTooLarge": "L'immagine deve essere inferiore a 2 MB",
+    "theme": {
+      "title": "Aspetto",
+      "description": "Scegli il tema colore preferito",
+      "light": "Chiaro",
+      "dark": "Scuro",
+      "system": "Sistema"
+    }
   },
   "inbox": {
     "title": "Posta in arrivo",
@@ -707,5 +714,12 @@
     "showList": "Lista",
     "projectLocation": "Posizione del progetto",
     "contractorLocation": "Posizione dell'impresa"
+  },
+  "pwa": {
+    "installTitle": "Installa ConstructShield",
+    "installDesc": "Aggiungi alla schermata iniziale per un accesso rapido",
+    "install": "Installa",
+    "dismiss": "Chiudi"
   }
 }
+

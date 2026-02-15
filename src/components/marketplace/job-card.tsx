@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Clock, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { formatCurrency, formatRelativeTime } from "@/lib/utils";
@@ -36,11 +37,13 @@ export async function JobCard({
     >
       <div className="flex items-start gap-4">
         {thumbnailUrl && (
-          <div className="hidden h-20 w-20 shrink-0 overflow-hidden rounded border sm:block">
-            <img
+          <div className="relative hidden h-20 w-20 shrink-0 overflow-hidden rounded border sm:block">
+            <Image
               src={thumbnailUrl}
               alt=""
-              className="h-full w-full object-cover"
+              fill
+              sizes="80px"
+              className="object-cover"
             />
           </div>
         )}

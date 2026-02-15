@@ -4,6 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { notify } from "@/lib/notifications";
 import { filterMessage } from "@/lib/chat/filter";
+import { createRateLimiter } from "@/lib/rate-limit";
+
+const messageLimiter = createRateLimiter({ maxRequests: 20, windowMs: 60_000 });
 
 export async function sendMessage(projectId: string, content: string) {
   const supabase = await createClient();
@@ -12,6 +15,7 @@ export async function sendMessage(projectId: string, content: string) {
   } = await supabase.auth.getUser();
 
   if (!user) throw new Error("Unauthorized");
+  messageLimiter.check(user.id);
   if (!content.trim()) throw new Error("Message cannot be empty");
 
   const filterResult = filterMessage(content);

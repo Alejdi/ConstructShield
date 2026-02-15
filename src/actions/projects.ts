@@ -5,6 +5,9 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod/v4";
+import { createRateLimiter } from "@/lib/rate-limit";
+
+const projectLimiter = createRateLimiter({ maxRequests: 5, windowMs: 60_000 });
 
 const createProjectSchema = z.object({
   title: z.string().min(1).max(200),
@@ -33,6 +36,12 @@ export async function createProject(
   } = await supabase.auth.getUser();
 
   if (!user) return { error: "Unauthorized" };
+
+  try {
+    projectLimiter.check(user.id);
+  } catch {
+    return { error: "Too many requests. Please try again later." };
+  }
 
   const raw = {
     title: formData.get("title"),

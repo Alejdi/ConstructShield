@@ -1,5 +1,7 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 
 export default function DashboardError({
@@ -10,6 +12,10 @@ export default function DashboardError({
   reset: () => void;
 }) {
   const t = useTranslations();
+
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
 
   return (
     <div className="mx-auto max-w-lg border p-8">

@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -69,10 +70,12 @@ export function ImageGallery({
             className="group relative aspect-video cursor-pointer overflow-hidden rounded-lg border"
             onClick={() => setSelectedIndex(idx)}
           >
-            <img
+            <Image
               src={getImageUrl(supabaseUrl, image.storage_path)}
               alt={image.caption || "Project image"}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              fill
+              sizes="(min-width: 1024px) 33vw, 50vw"
+              className="object-cover transition-transform group-hover:scale-105"
             />
             {image.caption && (
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 to-transparent p-3">
@@ -106,9 +109,12 @@ export function ImageGallery({
         <DialogContent className="max-w-4xl p-2 sm:p-4">
           {selectedIndex !== null && (
             <div className="relative">
-              <img
+              <Image
                 src={getImageUrl(supabaseUrl, sorted[selectedIndex].storage_path)}
                 alt={sorted[selectedIndex].caption || "Project image"}
+                width={1200}
+                height={800}
+                sizes="(min-width: 1024px) 60vw, 95vw"
                 className="w-full rounded"
               />
               {sorted[selectedIndex].caption && (

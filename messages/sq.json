@@ -580,7 +580,14 @@
     "avatarHint": "JPG, PNG ose WebP. Maks 5 MB.",
     "avatarUpdated": "Foto e profilit u përditësua!",
     "avatarFailed": "Ngarkimi i fotos dështoi",
-    "avatarTooLarge": "Imazhi duhet të jetë nën 2 MB"
+    "avatarTooLarge": "Imazhi duhet të jetë nën 2 MB",
+    "theme": {
+      "title": "Pamja",
+      "description": "Zgjidhni temen e preferuar te ngjyrave",
+      "light": "E ndricme",
+      "dark": "E erret",
+      "system": "Sistemi"
+    }
   },
   "inbox": {
     "title": "Kutia hyrëse",
@@ -707,5 +714,11 @@
     "showList": "Lista",
     "projectLocation": "Vendndodhja e projektit",
     "contractorLocation": "Vendndodhja e kontraktorit"
+  },
+  "pwa": {
+    "installTitle": "Instalo ConstructShield",
+    "installDesc": "Shto ne ekranin kryesor per qasje te shpejte",
+    "install": "Instalo",
+    "dismiss": "Mbyll"
   }
 }

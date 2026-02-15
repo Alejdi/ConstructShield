@@ -4,6 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { notify } from "@/lib/notifications";
+import { createRateLimiter } from "@/lib/rate-limit";
+
+const disputeLimiter = createRateLimiter({ maxRequests: 3, windowMs: 60_000 });
 
 export async function openDispute(projectId: string, reason: string) {
   const supabase = await createClient();
@@ -12,6 +15,7 @@ export async function openDispute(projectId: string, reason: string) {
   } = await supabase.auth.getUser();
 
   if (!user) throw new Error("Unauthorized");
+  disputeLimiter.check(user.id);
 
   const trimmedReason = reason.trim();
   if (!trimmedReason || trimmedReason.length < 10) {

@@ -5,6 +5,9 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { notify } from "@/lib/notifications";
 import { z } from "zod/v4";
+import { createRateLimiter } from "@/lib/rate-limit";
+
+const reviewLimiter = createRateLimiter({ maxRequests: 5, windowMs: 60_000 });
 
 const submitReviewSchema = z.object({
   projectId: z.string().uuid(),
@@ -27,6 +30,12 @@ export async function submitReview(
   } = await supabase.auth.getUser();
 
   if (!user) return { error: "Unauthorized" };
+
+  try {
+    reviewLimiter.check(user.id);
+  } catch {
+    return { error: "Too many requests. Please try again later." };
+  }
 
   const { data: profileData } = await supabase
     .from("profiles")
