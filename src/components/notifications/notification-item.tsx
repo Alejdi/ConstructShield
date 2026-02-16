@@ -16,6 +16,9 @@ import {
   FolderCheck,
   Star,
   AlertTriangle,
+  ShieldCheck,
+  ShieldX,
+  ShieldAlert,
 } from "lucide-react";
 import type { NotificationType } from "@/lib/types/database";
 
@@ -31,6 +34,9 @@ const NOTIFICATION_ICONS: Record<NotificationType, React.ComponentType<{ classNa
   project_completed: FolderCheck,
   review_received: Star,
   dispute_opened: AlertTriangle,
+  verification_approved: ShieldCheck,
+  verification_rejected: ShieldX,
+  verification_submitted: ShieldAlert,
 };
 
 interface NotificationItemProps {

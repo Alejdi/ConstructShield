@@ -6,7 +6,7 @@ import { captureHold, cancelHold } from "@/lib/stripe/escrow";
 import { revalidatePath } from "next/cache";
 import { notify } from "@/lib/notifications";
 
-async function requireAdmin() {
+export async function requireAdmin() {
   const supabase = await createClient();
   const {
     data: { user },

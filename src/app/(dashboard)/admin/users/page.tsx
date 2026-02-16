@@ -16,12 +16,14 @@ type UserRow = {
   avatar_url: string | null;
   role: string;
   created_at: string;
+  verification_status: string;
 };
 
 type ContractorRow = {
   id: string;
   verified: boolean;
   subscription_tier: SubscriptionTier | null;
+  verification_status: string;
 };
 
 export default async function AdminUsersPage() {
@@ -31,11 +33,11 @@ export default async function AdminUsersPage() {
   const [{ data: usersData }, { data: contractorsData }] = await Promise.all([
     admin
       .from("profiles")
-      .select("id, full_name, avatar_url, role, created_at")
+      .select("id, full_name, avatar_url, role, created_at, verification_status")
       .order("created_at", { ascending: false }),
     admin
       .from("contractors")
-      .select("id, verified, subscription_tier"),
+      .select("id, verified, subscription_tier, verification_status"),
   ]);
 
   const users = (usersData ?? []) as UserRow[];
@@ -77,9 +79,21 @@ export default async function AdminUsersPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                {contractor?.verified && (
-                  <Badge variant="secondary">{t("contractor.verified")}</Badge>
-                )}
+                {(() => {
+                  const vStatus = contractor
+                    ? contractor.verification_status
+                    : user.verification_status;
+                  if (vStatus === "pending") {
+                    return <Badge variant="outline" className="border-warning-amber/50 text-warning-amber">{t("verification.status.pending")}</Badge>;
+                  }
+                  if (vStatus === "approved") {
+                    return <Badge variant="secondary">{t("contractor.verified")}</Badge>;
+                  }
+                  if (vStatus === "rejected") {
+                    return <Badge variant="outline" className="border-danger-red/50 text-danger-red">{t("verification.status.rejected")}</Badge>;
+                  }
+                  return null;
+                })()}
                 {contractor?.subscription_tier && (
                   <Badge variant="outline">
                     {t(subscriptionTierKey(contractor.subscription_tier))}

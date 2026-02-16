@@ -6,6 +6,7 @@ import { formatCurrency } from "@/lib/utils";
 import type { ProjectStatus, MilestoneStatus } from "@/lib/types/database";
 import { NearbyActivity } from "@/components/location/nearby-activity";
 import { ProjectListFilter } from "@/components/projects/project-list-filter";
+import { VerificationBanner } from "@/components/verification/verification-banner";
 import { getTranslations } from "next-intl/server";
 
 type ProjectWithMilestones = {
@@ -29,6 +30,13 @@ export default async function ClientDashboardPage() {
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
+
+  const { data: verifyData } = await supabase
+    .from("profiles")
+    .select("verification_status")
+    .eq("id", user.id)
+    .single();
+  const verificationStatus = (verifyData as { verification_status: string } | null)?.verification_status ?? "unverified";
 
   const { data } = await supabase
     .from("projects")
@@ -55,6 +63,8 @@ export default async function ClientDashboardPage() {
 
   return (
     <div className="space-y-8">
+      <VerificationBanner verificationStatus={verificationStatus} role="client" />
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t("nav.dashboard")}</h1>

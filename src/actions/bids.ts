@@ -51,10 +51,10 @@ export async function submitBid(
     return { error: "Only contractors can submit bids" };
   }
 
-  // Subscription gating
+  // Subscription & verification gating
   const { data: contractorData } = await supabase
     .from("contractors")
-    .select("id, subscription_tier, subscription_status, trial_ends_at")
+    .select("id, subscription_tier, subscription_status, trial_ends_at, verification_status")
     .eq("id", user.id)
     .single();
 
@@ -63,7 +63,12 @@ export async function submitBid(
     subscription_tier: SubscriptionTier;
     subscription_status: string;
     trial_ends_at: string;
+    verification_status: string;
   } | null;
+
+  if (contractor?.verification_status !== "approved") {
+    return { error: "You must verify your identity before submitting bids. Go to Settings to complete verification." };
+  }
 
   if (contractor) {
     const check = await canPlaceBid(supabase, contractor);

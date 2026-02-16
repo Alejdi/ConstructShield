@@ -8,6 +8,8 @@ export type MilestoneStatus =
   | "verification_pending"
   | "released";
 export type BidStatus = "pending" | "accepted" | "rejected" | "withdrawn";
+export type VerificationStatus = "unverified" | "pending" | "approved" | "rejected";
+export type IdDocumentType = "passport" | "drivers_license" | "national_id";
 export type ServiceListingStatus = "active" | "paused";
 export type SubscriptionStatus = "trialing" | "active" | "past_due" | "canceled" | "expired";
 export type NotificationType =
@@ -21,7 +23,10 @@ export type NotificationType =
   | "message_received"
   | "project_completed"
   | "review_received"
-  | "dispute_opened";
+  | "dispute_opened"
+  | "verification_approved"
+  | "verification_rejected"
+  | "verification_submitted";
 
 export interface Database {
   public: {
@@ -33,6 +38,12 @@ export interface Database {
           full_name: string;
           avatar_url: string | null;
           stripe_customer_id: string | null;
+          verification_status: VerificationStatus;
+          id_document_path: string | null;
+          id_document_type: string | null;
+          verification_rejected_reason: string | null;
+          verification_submitted_at: string | null;
+          verification_reviewed_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -42,12 +53,21 @@ export interface Database {
           full_name?: string;
           avatar_url?: string | null;
           stripe_customer_id?: string | null;
+          verification_status?: VerificationStatus;
+          id_document_path?: string | null;
+          id_document_type?: string | null;
         };
         Update: {
           role?: UserRole;
           full_name?: string;
           avatar_url?: string | null;
           stripe_customer_id?: string | null;
+          verification_status?: VerificationStatus;
+          id_document_path?: string | null;
+          id_document_type?: string | null;
+          verification_rejected_reason?: string | null;
+          verification_submitted_at?: string | null;
+          verification_reviewed_at?: string | null;
         };
       };
       contractors: {
@@ -70,6 +90,11 @@ export interface Database {
           trial_ends_at: string;
           current_period_end: string | null;
           reputation_score: number;
+          verification_status: VerificationStatus;
+          tax_id: string | null;
+          verification_rejected_reason: string | null;
+          verification_submitted_at: string | null;
+          verification_reviewed_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -92,6 +117,8 @@ export interface Database {
           trial_ends_at?: string;
           current_period_end?: string | null;
           reputation_score?: number;
+          verification_status?: VerificationStatus;
+          tax_id?: string | null;
         };
         Update: {
           business_name?: string;
@@ -111,6 +138,11 @@ export interface Database {
           trial_ends_at?: string;
           current_period_end?: string | null;
           reputation_score?: number;
+          verification_status?: VerificationStatus;
+          tax_id?: string | null;
+          verification_rejected_reason?: string | null;
+          verification_submitted_at?: string | null;
+          verification_reviewed_at?: string | null;
         };
       };
       projects: {
@@ -556,6 +588,7 @@ export interface Database {
       milestone_status: MilestoneStatus;
       bid_status: BidStatus;
       service_listing_status: ServiceListingStatus;
+      verification_status: VerificationStatus;
     };
   };
 }

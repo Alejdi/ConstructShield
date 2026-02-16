@@ -74,6 +74,17 @@ export default async function JobDetailPage({
     .single();
   const role = (profileData as { role: string } | null)?.role;
 
+  // Fetch contractor verification status if contractor
+  let contractorVerified = false;
+  if (role === "contractor") {
+    const { data: cData } = await supabase
+      .from("contractors")
+      .select("verification_status")
+      .eq("id", user.id)
+      .single();
+    contractorVerified = (cData as { verification_status: string } | null)?.verification_status === "approved";
+  }
+
   // Fetch bids
   const { data: bidsData } = await supabase
     .from("bids")
@@ -146,13 +157,28 @@ export default async function JobDetailPage({
 
       {/* Contractor: Bid Form */}
       {role === "contractor" && project.status === "bidding" && !existingBid && (
-        <div className="mt-6 border p-6">
-          <h2 className="mb-4 text-lg font-bold">{t("bids.submitYourBid")}</h2>
-          <BidForm
-            projectId={projectId}
-            suggestedBudget={project.total_budget}
-          />
-        </div>
+        contractorVerified ? (
+          <div className="mt-6 border p-6">
+            <h2 className="mb-4 text-lg font-bold">{t("bids.submitYourBid")}</h2>
+            <BidForm
+              projectId={projectId}
+              suggestedBudget={project.total_budget}
+            />
+          </div>
+        ) : (
+          <div className="mt-6 flex items-center gap-4 border border-danger-red/30 p-6">
+            <div className="flex-1">
+              <p className="font-medium">{t("verification.requiredToSubmitBid")}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{t("verification.bannerUnverifiedContractorDesc")}</p>
+            </div>
+            <Link
+              href="/settings"
+              className="inline-flex shrink-0 items-center bg-foreground px-5 py-2.5 text-xs font-medium uppercase tracking-[0.15em] text-background transition-colors hover:bg-foreground/90"
+            >
+              {t("verification.goToSettings")}
+            </Link>
+          </div>
+        )
       )}
 
       {/* Contractor: Existing Bid */}

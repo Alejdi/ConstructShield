@@ -16,6 +16,7 @@ import { BID_STATUS_COLORS } from "@/lib/constants";
 import { formatRelativeTime } from "@/lib/utils";
 import type { ProjectStatus, MilestoneStatus, BidStatus } from "@/lib/types/database";
 import { SubscriptionBanner } from "@/components/subscription/subscription-banner";
+import { VerificationBanner } from "@/components/verification/verification-banner";
 import { getTranslations } from "next-intl/server";
 
 type ProjectWithMilestones = {
@@ -41,7 +42,7 @@ export default async function ContractorDashboardPage() {
 
   const { data: contractorData } = await supabase
     .from("contractors")
-    .select("stripe_connect_account_id, verified, subscription_status, trial_ends_at")
+    .select("stripe_connect_account_id, verified, subscription_status, trial_ends_at, verification_status")
     .eq("id", user.id)
     .single();
 
@@ -50,6 +51,7 @@ export default async function ContractorDashboardPage() {
     verified: boolean;
     subscription_status: string;
     trial_ends_at: string;
+    verification_status: string;
   } | null;
 
   const { data } = await supabase
@@ -125,6 +127,14 @@ export default async function ContractorDashboardPage() {
         <SubscriptionBanner
           subscriptionStatus={contractor.subscription_status}
           trialEndsAt={contractor.trial_ends_at}
+        />
+      )}
+
+      {/* Verification Banner */}
+      {contractor && (
+        <VerificationBanner
+          verificationStatus={contractor.verification_status}
+          role="contractor"
         />
       )}
 

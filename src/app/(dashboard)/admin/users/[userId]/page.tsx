@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { subscriptionTierKey, projectStatusKey } from "@/lib/i18n-constants";
 import Link from "next/link";
-import { VerifyButton } from "@/components/admin/verify-button";
+import { VerificationReview } from "@/components/admin/verification-review";
 import type { ProjectStatus, SubscriptionTier } from "@/lib/types/database";
 import { getTranslations } from "next-intl/server";
 
@@ -14,6 +14,12 @@ type ProfileRow = {
   avatar_url: string | null;
   role: string;
   created_at: string;
+  verification_status: string;
+  id_document_path: string | null;
+  id_document_type: string | null;
+  verification_rejected_reason: string | null;
+  verification_submitted_at: string | null;
+  verification_reviewed_at: string | null;
 };
 
 type ContractorRow = {
@@ -22,6 +28,11 @@ type ContractorRow = {
   verified: boolean;
   subscription_tier: SubscriptionTier | null;
   bio: string | null;
+  verification_status: string;
+  tax_id: string | null;
+  verification_rejected_reason: string | null;
+  verification_submitted_at: string | null;
+  verification_reviewed_at: string | null;
 };
 
 type ReviewRow = {
@@ -46,7 +57,7 @@ export default async function AdminUserDetailPage({
 
   const { data: profileData } = await admin
     .from("profiles")
-    .select("id, full_name, avatar_url, role, created_at")
+    .select("id, full_name, avatar_url, role, created_at, verification_status, id_document_path, id_document_type, verification_rejected_reason, verification_submitted_at, verification_reviewed_at")
     .eq("id", userId)
     .single();
 
@@ -60,7 +71,7 @@ export default async function AdminUserDetailPage({
     isContractor
       ? admin
           .from("contractors")
-          .select("id, business_name, verified, subscription_tier, bio")
+          .select("id, business_name, verified, subscription_tier, bio, verification_status, tax_id, verification_rejected_reason, verification_submitted_at, verification_reviewed_at")
           .eq("id", userId)
           .single()
       : Promise.resolve({ data: null }),
@@ -134,15 +145,9 @@ export default async function AdminUserDetailPage({
               </p>
             </div>
             <div className="space-y-1 border-t pt-4">
-              <div className="flex items-center gap-2">
-                <p className="text-lg font-bold">
-                  {contractor.verified ? t("contractor.verified") : t("admin.notVerified")}
-                </p>
-                <VerifyButton
-                  contractorId={contractor.id}
-                  verified={contractor.verified}
-                />
-              </div>
+              <p className="text-lg font-bold">
+                {contractor.verified ? t("contractor.verified") : t("admin.notVerified")}
+              </p>
               <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
                 {t("admin.verification")}
               </p>
@@ -171,6 +176,38 @@ export default async function AdminUserDetailPage({
           {contractor.bio && (
             <p className="text-sm text-muted-foreground">{contractor.bio}</p>
           )}
+
+          {/* Verification Review */}
+          <div className="border p-4">
+            <VerificationReview
+              userId={profile.id}
+              role="contractor"
+              verificationStatus={contractor.verification_status}
+              documentPath={null}
+              documentType={null}
+              taxId={contractor.tax_id}
+              rejectedReason={contractor.verification_rejected_reason}
+              submittedAt={contractor.verification_submitted_at}
+              reviewedAt={contractor.verification_reviewed_at}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Client Verification Review */}
+      {profile.role === "client" && (
+        <div className="border p-4">
+          <VerificationReview
+            userId={profile.id}
+            role="client"
+            verificationStatus={profile.verification_status}
+            documentPath={profile.id_document_path}
+            documentType={profile.id_document_type}
+            taxId={null}
+            rejectedReason={profile.verification_rejected_reason}
+            submittedAt={profile.verification_submitted_at}
+            reviewedAt={profile.verification_reviewed_at}
+          />
         </div>
       )}
 

@@ -37,6 +37,18 @@ export async function createProject(
 
   if (!user) return { error: "Unauthorized" };
 
+  // Check client is verified
+  const { data: verifyData } = await supabase
+    .from("profiles")
+    .select("verification_status")
+    .eq("id", user.id)
+    .single();
+
+  const verifyProfile = verifyData as { verification_status: string } | null;
+  if (verifyProfile?.verification_status !== "approved") {
+    return { error: "You must verify your identity before creating projects. Go to Settings to complete verification." };
+  }
+
   try {
     projectLimiter.check(user.id);
   } catch {

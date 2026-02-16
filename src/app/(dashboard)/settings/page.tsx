@@ -11,6 +11,8 @@ import { NotificationPreferences } from "@/components/notifications/notification
 import { PushToggle } from "@/components/notifications/push-toggle";
 import { AvatarUpload } from "@/components/settings/avatar-upload";
 import { ThemeToggle } from "@/components/settings/theme-toggle";
+import { ClientVerificationCard } from "@/components/verification/client-verification-card";
+import { ContractorVerificationCard } from "@/components/verification/contractor-verification-card";
 import { getTranslations } from "next-intl/server";
 
 export const metadata = {
@@ -28,7 +30,7 @@ export default async function SettingsPage() {
 
   const { data: profileData } = await supabase
     .from("profiles")
-    .select("full_name, role, avatar_url")
+    .select("full_name, role, avatar_url, verification_status, id_document_type, verification_rejected_reason")
     .eq("id", user.id)
     .single();
 
@@ -36,9 +38,36 @@ export default async function SettingsPage() {
     full_name: string;
     role: string;
     avatar_url: string | null;
+    verification_status: string;
+    id_document_type: string | null;
+    verification_rejected_reason: string | null;
   } | null;
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+
+  // Fetch contractor verification data if contractor
+  let contractorVerification: {
+    verification_status: string;
+    tax_id: string | null;
+    verification_rejected_reason: string | null;
+  } | null = null;
+
+  if (profile?.role === "contractor") {
+    const { data: contractorData } = await supabase
+      .from("contractors")
+      .select("verification_status, tax_id, verification_rejected_reason")
+      .eq("id", user.id)
+      .single();
+
+    const cd = contractorData as Record<string, unknown> | null;
+    if (cd) {
+      contractorVerification = {
+        verification_status: cd.verification_status as string,
+        tax_id: (cd.tax_id as string) ?? null,
+        verification_rejected_reason: (cd.verification_rejected_reason as string) ?? null,
+      };
+    }
+  }
 
   // Fetch notification preferences
   const { data: prefData } = await supabase
@@ -84,6 +113,24 @@ export default async function SettingsPage() {
           </div>
         </CardContent>
       </Card>
+
+      {profile?.role === "client" && (
+        <ClientVerificationCard
+          verificationStatus={profile.verification_status}
+          documentType={profile.id_document_type}
+          rejectedReason={profile.verification_rejected_reason}
+          userId={user.id}
+          supabaseUrl={supabaseUrl}
+        />
+      )}
+
+      {profile?.role === "contractor" && contractorVerification && (
+        <ContractorVerificationCard
+          verificationStatus={contractorVerification.verification_status}
+          taxId={contractorVerification.tax_id}
+          rejectedReason={contractorVerification.verification_rejected_reason}
+        />
+      )}
 
       <Card>
         <CardHeader>
